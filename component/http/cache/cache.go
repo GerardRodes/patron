@@ -71,7 +71,7 @@ type control struct {
 // executor is the function returning a cache Response object from the underlying implementation.
 type executor func(now int64, key string) *response
 
-// handler wraps the an execution logic with a cache layer
+// handler wraps the execution logic with a cache layer
 // exec is the processor func that the cache will wrap
 // rc is the route cache implementation to be used.
 func handler(exec executor, rc *RouteCache) func(request *handlerRequest) (response *handlerResponse, e error) {
