@@ -99,6 +99,13 @@ func Test_SQS_Publish_Message_v2(t *testing.T) {
 	msgID, err := pub.Publish(context.Background(), msg)
 	assert.NoError(t, err)
 	assert.IsType(t, "string", msgID)
+	expected := map[string]interface{}{
+		"component": "sqs-publisher",
+		"error":     false,
+		"span.kind": ext.SpanKindEnum("producer"),
+		"version":   "dev",
+	}
+	assert.Equal(t, expected, mtr.FinishedSpans()[0].Tags())
 
 	out, err := api.ReceiveMessage(&sqs.ReceiveMessageInput{
 		QueueUrl:        &queue,
@@ -107,12 +114,4 @@ func Test_SQS_Publish_Message_v2(t *testing.T) {
 	require.NoError(t, err)
 	assert.Len(t, out.Messages, 1)
 	assert.Equal(t, string(sentMsgBody), *out.Messages[0].Body)
-
-	expected := map[string]interface{}{
-		"component": "sqs-publisher",
-		"error":     false,
-		"span.kind": ext.SpanKindEnum("producer"),
-		"version":   "dev",
-	}
-	assert.Equal(t, expected, mtr.FinishedSpans()[0].Tags())
 }
