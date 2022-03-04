@@ -53,14 +53,6 @@ func Test_SQS_Publish_Message(t *testing.T) {
 	assert.NoError(t, err)
 	assert.IsType(t, "string", msgID)
 
-	out, err := api.ReceiveMessage(&sqs.ReceiveMessageInput{
-		QueueUrl:        &queue,
-		WaitTimeSeconds: aws.Int64(2),
-	})
-	require.NoError(t, err)
-	assert.Len(t, out.Messages, 1)
-	assert.Equal(t, string(sentMsgBody), *out.Messages[0].Body)
-
 	expected := map[string]interface{}{
 		"component": "sqs-publisher",
 		"error":     false,
@@ -68,6 +60,14 @@ func Test_SQS_Publish_Message(t *testing.T) {
 		"version":   "dev",
 	}
 	assert.Equal(t, expected, mtr.FinishedSpans()[0].Tags())
+
+	out, err := api.ReceiveMessage(&sqs.ReceiveMessageInput{
+		QueueUrl:        &queue,
+		WaitTimeSeconds: aws.Int64(2),
+	})
+	require.NoError(t, err)
+	assert.Len(t, out.Messages, 1)
+	assert.Equal(t, string(sentMsgBody), *out.Messages[0].Body)
 }
 
 func Test_SQS_Publish_Message_v2(t *testing.T) {
