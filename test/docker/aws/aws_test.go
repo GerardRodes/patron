@@ -26,8 +26,8 @@ const (
 	testSnsRegion    = "eu-west-1"
 	testSNSTopic     = "test-topic"
 	testSQSQueueName = "test-publish-message"
-	snsPort          = "4575/tcp"
-	sqsPort          = "4576/tcp"
+	snsPort          = "4566/tcp"
+	sqsPort          = "4566/tcp"
 )
 
 var (
